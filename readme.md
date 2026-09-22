@@ -12,9 +12,29 @@
 | `mta.yaml` | MTA deploy (srv, HDI, approuter, XSUAA, HANA) |
 | `DEPLOYMENT.md` | BTP deploy steps and role collection assignment |
 
-## Local run
+## Local run (incl. SAP Business Application Studio)
 
-Requires **Node.js 22** (CAP 10). With [nvm-windows](https://github.com/coreybutler/nvm-windows):
+**One-time setup** (project root, not `app/`):
+
+```bash
+npm run setup
+npx cds deploy --to sqlite --profile local
+```
+
+**Two terminals — project root** (`Full_Stack` / repo root):
+
+| Terminal | Command |
+|----------|---------|
+| Backend | `cds watch --profile local` or `npm run watch` |
+| Frontend | `npm run dev` or `npm run ui:dev` |
+
+If your terminal is already in **`app/`**, use `npm run dev` (runs `library-ui`).
+
+Or run the UI from **`app/library-ui/`**: `npm run dev`.
+
+Open the **frontend** preview URL (port **5173**). API is on **4004**; Vite proxies `/library`.
+
+Requires **Node.js 22** (CAP 10). On Windows with [nvm-windows](https://github.com/coreybutler/nvm-windows):
 
 ```powershell
 nvm use 22.14.0

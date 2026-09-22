@@ -174,7 +174,7 @@ export default cds.service.impl(async function () {
             const lateDays = Math.ceil((ret - due) / (1000 * 60 * 60 * 24));
 
             req.data.fineAmount = lateDays > 0 ? lateDays * LATE_FINE_PER_DAY : 0;
-        }
+        } 
     });
 
     // Restore stock after a book is returned
