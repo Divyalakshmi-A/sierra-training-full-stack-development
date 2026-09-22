@@ -2,13 +2,32 @@
   "xsappname": "library-management",
   "tenant-mode": "dedicated",
   "scopes": [
-    { "name": "$XSAPPNAME.Admin",     "description": "Full administrative access" },
-    { "name": "$XSAPPNAME.Librarian", "description": "Manage books, members, issue records" },
-    { "name": "$XSAPPNAME.Member",    "description": "View books and own records" }
+    {
+      "name": "$XSAPPNAME.Admin",
+      "description": "Full administrative access to the library system"
+    },
+    {
+      "name": "$XSAPPNAME.Member",
+      "description": "Read books, categories, and issue records"
+    }
   ],
   "role-templates": [
-    { "name": "Admin",     "description": "Administrator", "scope-references": ["$XSAPPNAME.Admin"] },
-    { "name": "Librarian", "description": "Librarian",     "scope-references": ["$XSAPPNAME.Librarian"] },
-    { "name": "Member",    "description": "Member",        "scope-references": ["$XSAPPNAME.Member"] }
-  ]
+    {
+      "name": "Admin",
+      "description": "Library administrator with full CRUD access",
+      "scope-references": ["$XSAPPNAME.Admin"]
+    },
+    {
+      "name": "Member",
+      "description": "Library member with read-only catalog access",
+      "scope-references": ["$XSAPPNAME.Member"]
+    }
+  ],
+  "oauth2-configuration": {
+    "redirect-uris": [
+      "https://*.cfapps.*.hana.ondemand.com/**",
+      "https://*.applicationcloud.hana.ondemand.com/**",
+      "http://localhost:5000/**"
+    ]
+  }
 }

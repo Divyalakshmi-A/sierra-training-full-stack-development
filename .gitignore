@@ -1,4 +1,7 @@
 node_modules/
+app/library-ui/.env
+app/router/node_modules/
+app/library-ui/node_modules/
 target/
 _out/
 gen/
