@@ -1,0 +1,11 @@
+ID,title,author,isbn,publisher,publishedYear,quantity,availableQuantity,price,category_ID
+b2b2e251-953b-4e48-bf4a-ba1403dcb001,SAP CAPM Guide,Divya,9781234567890,SAP Press,2026,10,10,850.00,c1a1e251-953b-4e48-bf4a-ba1403dca001
+b2b2e251-953b-4e48-bf4a-ba1403dcb002,Clean Code,Robert C. Martin,9780132350884,Prentice Hall,2008,8,6,1200.00,c1a1e251-953b-4e48-bf4a-ba1403dca001
+b2b2e251-953b-4e48-bf4a-ba1403dcb003,The Alchemist,Paulo Coelho,9780061122415,HarperOne,1988,15,15,450.00,c1a1e251-953b-4e48-bf4a-ba1403dca002
+b2b2e251-953b-4e48-bf4a-ba1403dcb004,A Brief History of Time,Stephen Hawking,9780553380163,Bantam,1988,6,5,650.00,c1a1e251-953b-4e48-bf4a-ba1403dca003
+b2b2e251-953b-4e48-bf4a-ba1403dcb005,Sapiens,Yuval Noah Harari,9780062316097,Harper,2015,12,10,700.00,c1a1e251-953b-4e48-bf4a-ba1403dca004
+b2b2e251-953b-4e48-bf4a-ba1403dcb006,The Lean Startup,Eric Ries,9780307887894,Crown Business,2011,7,7,550.00,c1a1e251-953b-4e48-bf4a-ba1403dca005
+b2b2e251-953b-4e48-bf4a-ba1403dcb007,Cosmos,Carl Sagan,9780345539434,Ballantine,1980,5,4,600.00,c1a1e251-953b-4e48-bf4a-ba1403dca003
+b2b2e251-953b-4e48-bf4a-ba1403dcb008,1984,George Orwell,9780451524935,Signet Classic,1949,20,18,300.00,c1a1e251-953b-4e48-bf4a-ba1403dca002
+b2b2e251-953b-4e48-bf4a-ba1403dcb009,Zero to One,Peter Thiel,9780804139298,Crown Business,2014,9,9,500.00,c1a1e251-953b-4e48-bf4a-ba1403dca005
+b2b2e251-953b-4e48-bf4a-ba1403dcb010,Sherlock Holmes: Complete Stories,Arthur Conan Doyle,9781840226306,Wordsworth,1892,10,9,400.00,c1a1e251-953b-4e48-bf4a-ba1403dca004
