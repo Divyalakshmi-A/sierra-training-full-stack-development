@@ -10,6 +10,7 @@ build-parameters:
       commands:
         - npm ci
         - npx cds build --production
+        - rm -rf node_modules .Full_Stack_mta_build_tmp mta_archives
 modules:
   - name: Full_Stack-srv
     type: nodejs
@@ -45,10 +46,14 @@ modules:
     build-parameters:
       builder: custom
       commands:
-        - npm ci
+        - npm ci --omit=dev
         - npm ci --prefix ../library-ui
         - npm run build --prefix ../library-ui
+        - rm -rf ../library-ui/node_modules
         - node -e "const fs=require('fs');const p='resources';fs.rmSync(p,{recursive:true,force:true});fs.mkdirSync(p,{recursive:true});fs.cpSync('../library-ui/dist',p,{recursive:true});"
+        - npm prune --omit=dev
+      ignore:
+        - "../library-ui/**"
     requires:
       - name: Full_Stack-auth
       - name: srv-api
