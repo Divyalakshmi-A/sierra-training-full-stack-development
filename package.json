@@ -17,8 +17,17 @@
   "private": true,
   "cds": {
     "requires": {
-      "[production]": {
-        "auth": "xsuaa"
+      "auth": {
+        "kind": "mocked",
+        "users": {
+          "admin":     { "password": "admin123",     "roles": ["Admin"] },
+          "librarian": { "password": "librarian123", "roles": ["Librarian"] },
+          "member":    { "password": "member123",    "roles": ["Member"] }
+        }
+      },
+      "db": {
+        "kind": "sqlite",
+        "credentials": { "url": "db.sqlite" }
       }
     }
   }

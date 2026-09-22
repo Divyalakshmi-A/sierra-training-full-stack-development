@@ -1,6 +1,14 @@
 {
-  "scopes": [],
-  "attributes": [],
-  "role-templates": [],
-  "authorities-inheritance": false
+  "xsappname": "library-management",
+  "tenant-mode": "dedicated",
+  "scopes": [
+    { "name": "$XSAPPNAME.Admin",     "description": "Full administrative access" },
+    { "name": "$XSAPPNAME.Librarian", "description": "Manage books, members, issue records" },
+    { "name": "$XSAPPNAME.Member",    "description": "View books and own records" }
+  ],
+  "role-templates": [
+    { "name": "Admin",     "description": "Administrator", "scope-references": ["$XSAPPNAME.Admin"] },
+    { "name": "Librarian", "description": "Librarian",     "scope-references": ["$XSAPPNAME.Librarian"] },
+    { "name": "Member",    "description": "Member",        "scope-references": ["$XSAPPNAME.Member"] }
+  ]
 }
