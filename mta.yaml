@@ -1,7 +1,7 @@
 _schema-version: 3.3.0
 ID: Full_Stack
 version: 1.0.0
-description: "A simple CAP project."
+description: Library Management System (CAP + React)
 parameters:
   enable-parallel-deployments: true
 build-parameters:
@@ -17,10 +17,11 @@ modules:
     parameters:
       instances: 1
       buildpack: nodejs_buildpack
+      memory: 256M
     build-parameters:
       builder: npm-ci
     provides:
-      - name: srv-api # required by consumers of CAP services (e.g. approuter)
+      - name: srv-api
         properties:
           srv-url: ${default-url}
     requires:
@@ -35,6 +36,29 @@ modules:
     requires:
       - name: Full_Stack-db
 
+  - name: Full_Stack-app
+    type: approuter.nodejs
+    path: app/router
+    parameters:
+      keep-existing-routes: true
+      memory: 128M
+    build-parameters:
+      builder: custom
+      commands:
+        - npm ci
+        - npm ci --prefix ../library-ui
+        - npm run build --prefix ../library-ui
+        - node -e "const fs=require('fs');const p='resources';fs.rmSync(p,{recursive:true,force:true});fs.mkdirSync(p,{recursive:true});fs.cpSync('../library-ui/dist',p,{recursive:true});"
+    requires:
+      - name: Full_Stack-auth
+      - name: srv-api
+        group: destinations
+        properties:
+          name: srv-api
+          url: ~{srv-url}
+          forwardAuthToken: true
+          strictSSL: true
+
 resources:
   - name: Full_Stack-auth
     type: org.cloudfoundry.managed-service
@@ -47,8 +71,12 @@ resources:
         tenant-mode: dedicated
         oauth2-configuration:
           credential-types:
-            - "binding-secret"
-            - "x509"
+            - binding-secret
+            - x509
+          redirect-uris:
+            - https://*.cfapps.*.hana.ondemand.com/**
+            - https://*.applicationcloud.hana.ondemand.com/**
+
   - name: Full_Stack-db
     type: com.sap.xs.hdi-container
     parameters:

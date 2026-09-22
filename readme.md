@@ -1,22 +1,43 @@
-# Getting Started
+# Library Management System (CAP + React)
 
-Welcome to your new CAP project.
+## Project layout
 
-It contains these folders and files, following our recommended project layout:
+| Path | Purpose |
+|------|---------|
+| `db/` | CDS domain model and CSV seed data |
+| `srv/` | OData service (`/library`), handlers, `@restrict` roles |
+| `app/library-ui/` | Vite + React + UI5 Web Components frontend |
+| `app/router/` | SAP Approuter for BTP (static UI + XSUAA + `/library` proxy) |
+| `xs-security.json` | XSUAA scopes and role templates |
+| `mta.yaml` | MTA deploy (srv, HDI, approuter, XSUAA, HANA) |
+| `DEPLOYMENT.md` | BTP deploy steps and role collection assignment |
 
-File or Folder | Purpose
----------|----------
-`app/` | content for UI frontends goes here
-`db/` | your domain models and data go here
-`srv/` | your service models and code go here
-`readme.md` | this getting started guide
+## Local run
 
-## Next Steps
+Requires **Node.js 22** (CAP 10). With [nvm-windows](https://github.com/coreybutler/nvm-windows):
 
-- Open a new terminal and run `cds watch`
-- (in VS Code simply choose _**Terminal** > Run Task > cds watch_)
-- Start with your domain model, in a CDS file in `db/`
+```powershell
+nvm use 22.14.0
+npm ci
+npx cds deploy --to sqlite --profile local
+```
 
-## Learn More
+Terminal 1 — API:
 
-Learn more at <https://cap.cloud.sap>.
+```powershell
+nvm use 22.14.0
+npm run watch
+```
+
+Terminal 2 — UI:
+
+```powershell
+nvm use 22.14.0
+npm run ui:dev
+```
+
+Or use `.\scripts\dev-api.ps1` and `.\scripts\dev-ui.ps1` (they prepend Node 22 to PATH).
+
+Open http://localhost:5173 and sign in with `admin` / `admin123` or `member` / `member123`.
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for Cloud Foundry / XSUAA deployment.

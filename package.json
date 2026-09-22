@@ -5,29 +5,86 @@
   "dependencies": {
     "@cap-js/hana": "^3",
     "@sap/cds": "^10.1.1",
-    "@sap/xssec": "^4"
+    "@sap/xssec": "^4",
+    "passport": "^0.7.0"
   },
   "devDependencies": {
     "@cap-js/sqlite": "^3",
     "@sap/cds-dk": "^10"
   },
   "scripts": {
-    "start": "cds-serve"
+    "start": "cds-serve",
+    "watch": "cds watch --profile local",
+    "prewatch": "node -e \"const v=+process.versions.node.split('.')[0]; if(v<22) { console.error('\\nCAP 10 requires Node.js 22+. Run: nvm use 22.14.0\\n'); process.exit(1); }\"",
+    "preui:dev": "node -e \"const v=+process.versions.node.split('.')[0]; if(v<18) { console.error('\\nUI requires Node.js 18+. Run: nvm use 22.14.0\\n'); process.exit(1); }\"",
+    "build": "cds build --production",
+    "ui:dev": "npm run dev --prefix app/library-ui",
+    "ui:build": "npm run build --prefix app/library-ui"
   },
   "private": true,
   "cds": {
+    "[production]": {
+      "requires": {
+        "auth": {
+          "kind": "xsuaa",
+          "roles": {
+            "Admin": [
+              "$XSAPPNAME.Admin"
+            ],
+            "Member": [
+              "$XSAPPNAME.Member"
+            ]
+          }
+        },
+        "db": "hana"
+      }
+    },
     "requires": {
       "auth": {
-        "kind": "mocked",
-        "users": {
-          "admin":     { "password": "admin123",     "roles": ["Admin"] },
-          "librarian": { "password": "librarian123", "roles": ["Librarian"] },
-          "member":    { "password": "member123",    "roles": ["Member"] }
+        "kind": "xsuaa",
+        "roles": {
+          "Admin": [
+            "$XSAPPNAME.Admin"
+          ],
+          "Member": [
+            "$XSAPPNAME.Member"
+          ]
         }
       },
       "db": {
-        "kind": "sqlite",
-        "credentials": { "url": "db.sqlite" }
+        "kind": "hana"
+      }
+    },
+    "[local]": {
+      "folders": {
+        "app": "app/router"
+      },
+      "requires": {
+        "auth": {
+          "kind": "mocked",
+          "users": {
+            "admin": {
+              "password": "admin123",
+              "roles": ["Admin"]
+            },
+            "member": {
+              "password": "member123",
+              "roles": ["Member"]
+            }
+          }
+        },
+        "db": {
+          "kind": "sqlite",
+          "credentials": {
+            "url": "db.sqlite"
+          }
+        }
+      },
+      "server": {
+        "cors": {
+          "origin": "http://localhost:5173",
+          "credentials": true
+        }
       }
     }
   }
