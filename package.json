@@ -18,8 +18,10 @@
     "prewatch": "node -e \"const v=+process.versions.node.split('.')[0]; if(v<22) { console.error('\\nCAP 10 requires Node.js 22+. Run: nvm use 22.14.0\\n'); process.exit(1); }\"",
     "preui:dev": "node -e \"const v=+process.versions.node.split('.')[0]; if(v<18) { console.error('\\nUI requires Node.js 18+. Run: nvm use 22.14.0\\n'); process.exit(1); }\"",
     "build": "cds build --production",
+    "dev": "npm run dev --prefix app/library-ui",
     "ui:dev": "npm run dev --prefix app/library-ui",
-    "ui:build": "npm run build --prefix app/library-ui"
+    "ui:build": "npm run build --prefix app/library-ui",
+    "setup": "npm ci && npm ci --prefix app/library-ui"
   },
   "private": true,
   "cds": {

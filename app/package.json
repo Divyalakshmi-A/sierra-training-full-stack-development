@@ -1,0 +1,10 @@
+{
+  "name": "library-app",
+  "private": true,
+  "description": "Convenience scripts when your terminal cwd is app/",
+  "scripts": {
+    "dev": "npm run dev --prefix library-ui",
+    "build": "npm run build --prefix library-ui",
+    "install:ui": "npm install --prefix library-ui"
+  }
+}
