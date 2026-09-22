@@ -1,0 +1,258 @@
+### =====================================================
+### LIBRARY MANAGEMENT SYSTEM - CAPM API TESTS
+### =====================================================
+
+@baseUrl = http://localhost:4004/library
+
+
+### =====================================================
+### 1. GET ALL CATEGORIES
+### =====================================================
+
+GET {{baseUrl}}/Categories
+Accept: application/json
+
+
+### =====================================================
+### 2. CREATE CATEGORY
+### =====================================================
+
+POST {{baseUrl}}/Categories
+Content-Type: application/json
+
+{
+    "name": "Technology",
+    "description": "Technology and programming books"
+}
+
+
+### =====================================================
+### 3. GET CATEGORY BY ID
+### Replace the ID with the ID returned from POST
+### =====================================================
+
+@categoryId = 64c8e251-953b-4e48-bf4a-ba1403dca635
+
+GET {{baseUrl}}/Categories({{categoryId}})
+Accept: application/json
+
+
+### =====================================================
+### 4. UPDATE CATEGORY
+### =====================================================
+
+PATCH {{baseUrl}}/Categories({{categoryId}})
+Content-Type: application/json
+
+{
+    "description": "Technology, programming and software development books"
+}
+
+
+### =====================================================
+### 5. DELETE CATEGORY
+### =====================================================
+
+DELETE {{baseUrl}}/Categories({{categoryId}})
+
+
+### =====================================================
+### BOOKS
+### =====================================================
+
+
+### 6. GET ALL BOOKS
+
+GET {{baseUrl}}/Books
+Accept: application/json
+
+
+### =====================================================
+### 7. CREATE BOOK
+### =====================================================
+
+@bookId = 4155729f-d65a-47d9-859e-9c4aa97303ee
+
+POST {{baseUrl}}/Books
+Content-Type: application/json
+
+{
+    "title": "SAP CAPM Guide",
+    "author": "Divya",
+    "isbn": "9781234567890",
+    "publisher": "SAP Press",
+    "publishedYear": 2026,
+    "quantity": 10,
+    "availableQuantity": 10,
+    "price": 850,
+    "category_ID": "{{categoryId}}"
+}
+
+
+### =====================================================
+### 8. GET BOOK BY ID
+### =====================================================
+
+GET {{baseUrl}}/Books({{bookId}})
+Accept: application/json
+
+
+### =====================================================
+### 9. UPDATE BOOK
+### =====================================================
+
+PATCH {{baseUrl}}/Books({{bookId}})
+Content-Type: application/json
+
+{
+    "price": 900,
+    "availableQuantity": 10
+}
+
+
+### =====================================================
+### 10. DELETE BOOK
+### =====================================================
+
+DELETE {{baseUrl}}/Books({{bookId}})
+
+
+### =====================================================
+### MEMBERS
+### =====================================================
+
+
+### 11. GET ALL MEMBERS
+
+GET {{baseUrl}}/Members
+Accept: application/json
+
+
+### =====================================================
+### 12. CREATE MEMBER
+### =====================================================
+
+@memberId = M001
+
+POST {{baseUrl}}/Members
+Content-Type: application/json
+
+{
+    "memberId": "M001",
+    "name": "Divya",
+    "email": "divya@example.com",
+    "phone": "9876543210",
+    "address": "Tamil Nadu",
+    "membershipDate": "2026-09-21",
+    "status": "ACTIVE"
+}
+
+
+### =====================================================
+### 13. GET MEMBER BY ID
+### =====================================================
+
+GET {{baseUrl}}/Members({{memberId}})
+Accept: application/json
+
+
+### =====================================================
+### 14. UPDATE MEMBER
+### =====================================================
+
+PATCH {{baseUrl}}/Members({{memberId}})
+Content-Type: application/json
+
+{
+    "phone": "9999999999"
+}
+
+
+### =====================================================
+### 15. DELETE MEMBER
+### =====================================================
+
+DELETE {{baseUrl}}/Members({{memberId}})
+
+
+### =====================================================
+### ISSUE RECORDS
+### =====================================================
+
+
+### 16. GET ALL ISSUE RECORDS
+
+GET {{baseUrl}}/IssueRecords
+Accept: application/json
+
+
+### =====================================================
+### 17. CREATE ISSUE RECORD
+### =====================================================
+
+@issueId = REPLACE_WITH_ISSUE_ID
+
+POST {{baseUrl}}/IssueRecords
+Content-Type: application/json
+
+{
+    "book_ID": "{{bookId}}",
+    "member_ID": "{{memberId}}",
+    "issueDate": "2026-09-21",
+    "dueDate": "2026-09-28",
+    "status": "ISSUED",
+    "fineAmount": 0
+}
+
+
+### =====================================================
+### 18. GET ISSUE RECORD BY ID
+### =====================================================
+
+GET {{baseUrl}}/IssueRecords({{issueId}})
+Accept: application/json
+
+
+### =====================================================
+### 19. UPDATE ISSUE RECORD
+### =====================================================
+
+PATCH {{baseUrl}}/IssueRecords({{issueId}})
+Content-Type: application/json
+
+{
+    "status": "RETURNED",
+    "returnDate": "2026-09-25"
+}
+
+
+### =====================================================
+### 20. DELETE ISSUE RECORD
+### =====================================================
+
+DELETE {{baseUrl}}/IssueRecords({{issueId}})
+
+
+### =====================================================
+### EXPAND / ASSOCIATIONS
+### =====================================================
+
+
+### 21. GET BOOKS WITH CATEGORY
+
+GET {{baseUrl}}/Books?$expand=category
+Accept: application/json
+
+
+### 22. GET ISSUE RECORDS WITH BOOK AND MEMBER
+
+GET {{baseUrl}}/IssueRecords?$expand=book,member
+Accept: application/json
+
+
+### =====================================================
+### METADATA
+### =====================================================
+
+GET {{baseUrl}}/$metadata
+Accept: application/xml
