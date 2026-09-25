@@ -5,6 +5,21 @@ export default cds.service.impl(async function () {
     const { Books, Members, IssueRecords } = this.entities;
     const LATE_FINE_PER_DAY = 5;
 
+    this.on('me', (req) => {
+        const roles = [];
+        if (req.user?.is('Admin')) roles.push('Admin');
+        if (req.user?.is('Member')) roles.push('Member');
+        if (Array.isArray(req.user?.roles)) {
+            roles.push(...req.user.roles);
+        } else if (req.user?.roles && typeof req.user.roles === 'object') {
+            roles.push(...Object.keys(req.user.roles));
+        }
+        return {
+            id: req.user?.id || 'user',
+            roles: [...new Set(roles)],
+        };
+    });
+
     // Helper to safely get the key from params (works for cuid UUID keys)
     const getId = (req) => {
         const p = req.params[req.params.length - 1];

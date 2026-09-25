@@ -23,7 +23,7 @@
     "ui:build": "npm run build --prefix app/library-ui",
     "setup": "npm ci && npm ci --prefix app/library-ui",
     "clean": "node scripts/clean-workspace.js",
-    "mta:build": "node scripts/clean-workspace.js && npm ci && mbt build",
+    "mta:build": "node scripts/prepare-mta.js && mbt build",
     "mta:deploy": "cf deploy mta_archives/Full_Stack_1.0.0.mtar"
   },
   "private": true,

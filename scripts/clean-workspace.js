@@ -16,6 +16,8 @@ const remove = [
   'app/library-ui/dist',
   'app/router/node_modules',
   'app/router/resources',
+  '.Full_Stack_mta_build_tmp',
+  '.gen',
   'db.sqlite',
   'db.sqlite-shm',
   'db.sqlite-wal',

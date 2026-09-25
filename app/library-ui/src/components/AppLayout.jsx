@@ -44,7 +44,7 @@ export default function AppLayout() {
           />
           <SideNavigationItem
             text="Book Catalog"
-            icon="book"
+            icon="course-book"
             selected={selected === 'books'}
             onClick={() => navigate('/books')}
           />

@@ -24,6 +24,17 @@ function saveAuth(data) {
   else sessionStorage.removeItem(STORAGE_KEY);
 }
 
+function appRolesFromScopes(scopes = []) {
+  const list = Array.isArray(scopes) ? scopes : String(scopes).split(/[,\s]+/);
+  const roles = new Set();
+  for (const raw of list) {
+    const s = String(raw);
+    if (/\.Admin$/i.test(s) || s === 'Admin') roles.add('Admin');
+    if (/\.Member$/i.test(s) || s === 'Member') roles.add('Member');
+  }
+  return [...roles];
+}
+
 export function AuthProvider({ children }) {
   const authMode = import.meta.env.VITE_AUTH_MODE || 'mock';
   const [bootstrapping, setBootstrapping] = useState(authMode === 'xsuaa');
@@ -39,19 +50,25 @@ export function AuthProvider({ children }) {
         setBootstrapping(false);
         return;
       }
-      const roles =
-        current.scopes?.map((s) => {
-          const part = s.split('.').pop();
-          if (part === 'Admin') return 'Admin';
-          if (part === 'Member') return 'Member';
-          return part;
-        }) || [];
+
+      let roles = appRolesFromScopes(current.scopes);
+      try {
+        const me = await api.getMe();
+        const capRoles = me?.roles || me?.value?.roles || [];
+        if (Array.isArray(capRoles) && capRoles.length) {
+          roles = [...new Set([...roles, ...capRoles.filter((r) => r === 'Admin' || r === 'Member')])];
+        }
+      } catch {
+        /* 403 here means JWT reached CAP but no library role */
+      }
+
+      if (cancelled) return;
       setUser({
-        username: current.userName || current.email || 'user',
+        username: current.userName || current.email || current.name || 'user',
         displayName: current.firstname
           ? `${current.firstname} ${current.lastname || ''}`.trim()
-          : current.userName,
-        roles: [...new Set(roles)],
+          : current.displayName || current.name || current.userName,
+        roles,
         mode: 'xsuaa',
       });
       setBootstrapping(false);
@@ -111,6 +128,8 @@ export function AuthProvider({ children }) {
       authMode,
       hasRole: (role) => user?.roles?.includes(role),
       canManage: () => user?.roles?.includes('Admin'),
+      hasLibraryAccess: () =>
+        user?.roles?.includes('Admin') || user?.roles?.includes('Member'),
       isReadOnly: () =>
         user?.roles?.includes('Member') && !user?.roles?.includes('Admin'),
     }),

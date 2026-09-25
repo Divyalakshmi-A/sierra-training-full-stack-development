@@ -1,6 +1,6 @@
 export function parseODataError(body, status) {
-  if (!body) {
-    return `Request failed (${status})`;
+  if (status === 403) {
+    return 'Forbidden: your user has no Admin or Member role collection. Assign Library-Admin or Library-Member in BTP Cockpit, then log out and back in.';
   }
   if (typeof body === 'string') {
     try {
