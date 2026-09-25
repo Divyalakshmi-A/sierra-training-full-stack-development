@@ -61,7 +61,7 @@ export async function fetchCurrentUserFromAppRouter() {
   if (mode !== 'xsuaa') return null;
   try {
     const res = await fetch(`${baseUrl}/user-api/currentUser`, { credentials: 'include' });
-    if (!res.ok) return null;
+    if (!res.ok || !res.headers.get('content-type')?.includes('application/json')) return null;
     return res.json();
   } catch {
     return null;
@@ -69,7 +69,7 @@ export async function fetchCurrentUserFromAppRouter() {
 }
 
 export const api = {
-  getMetadata: () => request('/$metadata', { headers: { Accept: 'application/xml' } }),
+  getMe: () => request('/me()'),
 
   getCategories: () => request('/Categories'),
   getBooks: (query = '') => request(`/Books${query}`),

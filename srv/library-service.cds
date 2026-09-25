@@ -1,7 +1,15 @@
 using library from '../db/schema';
 
+type UserInfo {
+    id    : String;
+    roles : array of String;
+}
+
 @path: '/library'
 service LibraryService {
+
+    @(requires: 'authenticated-user')
+    function me() returns UserInfo;
 
     @(restrict: [
         { grant: ['READ'],                        to: 'Member' },

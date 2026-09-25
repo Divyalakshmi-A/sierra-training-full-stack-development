@@ -8,9 +8,7 @@ build-parameters:
   before-all:
     - builder: custom
       commands:
-        - npm ci
-        - npx cds build --production
-        - rm -rf node_modules .Full_Stack_mta_build_tmp mta_archives
+        - node scripts/prepare-mta.js
 modules:
   - name: Full_Stack-srv
     type: nodejs
@@ -18,9 +16,12 @@ modules:
     parameters:
       instances: 1
       buildpack: nodejs_buildpack
-      memory: 256M
+      memory: 1024M
     build-parameters:
-      builder: npm-ci
+      builder: custom
+      commands: []
+      ignore:
+        - node_modules/
     provides:
       - name: srv-api
         properties:
@@ -34,26 +35,25 @@ modules:
     path: gen/db
     parameters:
       buildpack: nodejs_buildpack
+    build-parameters:
+      ignore:
+        - node_modules/
     requires:
       - name: Full_Stack-db
 
+  # Approuter hosts the Vite UI from localDir "resources" (filled by scripts/prepare-mta.js).
   - name: Full_Stack-app
     type: approuter.nodejs
     path: app/router
     parameters:
       keep-existing-routes: true
-      memory: 128M
+      memory: 256M
     build-parameters:
       builder: custom
-      commands:
-        - npm ci --omit=dev
-        - npm ci --prefix ../library-ui
-        - npm run build --prefix ../library-ui
-        - rm -rf ../library-ui/node_modules
-        - node -e "const fs=require('fs');const p='resources';fs.rmSync(p,{recursive:true,force:true});fs.mkdirSync(p,{recursive:true});fs.cpSync('../library-ui/dist',p,{recursive:true});"
-        - npm prune --omit=dev
+      commands: []
       ignore:
-        - "../library-ui/**"
+        - node_modules/
+        - "*.md"
     requires:
       - name: Full_Stack-auth
       - name: srv-api
@@ -62,7 +62,7 @@ modules:
           name: srv-api
           url: ~{srv-url}
           forwardAuthToken: true
-          strictSSL: true
+          strictSSL: false
 
 resources:
   - name: Full_Stack-auth

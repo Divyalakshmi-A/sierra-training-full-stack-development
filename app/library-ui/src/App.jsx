@@ -9,9 +9,15 @@ import BookForm from './pages/BookForm.jsx';
 import MemberManagement from './pages/MemberManagement.jsx';
 import IssueReturn from './pages/IssueReturn.jsx';
 
+import AccessDenied from './pages/AccessDenied.jsx';
+
 function ProtectedRoute({ children, adminOnly = false }) {
-  const { isAuthenticated, canManage } = useAuth();
-  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  const { isAuthenticated, canManage, hasLibraryAccess, authMode } = useAuth();
+  if (!isAuthenticated) {
+    if (authMode === 'xsuaa') return <AccessDenied />;
+    return <Navigate to="/login" replace />;
+  }
+  if (!hasLibraryAccess()) return <AccessDenied />;
   if (adminOnly && !canManage()) return <Navigate to="/" replace />;
   return children;
 }

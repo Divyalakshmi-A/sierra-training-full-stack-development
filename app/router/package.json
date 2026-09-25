@@ -3,13 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@sap/approuter": "^17",
-    "Full_Stack": "file:../.."
+    "@sap/approuter": "^17"
   },
   "scripts": {
     "start": "node node_modules/@sap/approuter/approuter.js"
   },
   "engines": {
-    "node": "^20"
+    "node": "^20 || ^22"
   }
 }

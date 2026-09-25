@@ -23,6 +23,18 @@
       "scope-references": ["$XSAPPNAME.Member"]
     }
   ],
+  "role-collections": [
+    {
+      "name": "Library-Admin",
+      "description": "Assign to users who manage the library",
+      "role-template-references": ["$XSAPPNAME.Admin"]
+    },
+    {
+      "name": "Library-Member",
+      "description": "Assign to users who only browse the catalog",
+      "role-template-references": ["$XSAPPNAME.Member"]
+    }
+  ],
   "oauth2-configuration": {
     "redirect-uris": [
       "https://*.cfapps.*.hana.ondemand.com/**",

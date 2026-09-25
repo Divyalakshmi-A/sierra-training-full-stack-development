@@ -28,22 +28,30 @@ Use your trial region URL from the cockpit (e.g. `eu10`, `us10`).
 
 ## Build and deploy (from project root)
 
-If you see **`no space left on device`** during `mbt build`, free disk first (see below), then:
+The MTA is sized for a **3 GB BAS** disk:
+
+- UI and CAP `node_modules` are used **only to build**, then deleted
+- `mbt` packages **source + built UI**, not `node_modules`
+- Cloud Foundry **installs npm packages during deploy** (plenty of disk on CF)
+
+**Do not** run `cds watch` and `mbt build` in the same space at the same time.
 
 ```bash
-npm run mta:build      # cleans temp folders, npm ci, mbt build
+# 1) free leftover install/build folders
+npm run clean
+npm cache clean --force
+df -h $HOME
+
+# 2) build small .mtar (prepare + mbt)
+npm run mta:build
+
+# 3) deploy (npm install happens on BTP)
 cf deploy mta_archives/Full_Stack_1.0.0.mtar
 ```
 
-Or manually:
+If `mbt` is not installed: `npm i -g mbt` uses extra disk — prefer the BAS **MTA Tools** extension / `mbt` already on PATH.
 
-```bash
-npm run clean
-npm cache clean --force
-df -h .                # check free space; aim for > 1 GB before build
-npm ci
-mbt build
-```
+First-time BAS after clone: you only need Node 22. **Do not** `npm run setup` before deploy — that installs local `node_modules` you do not need for `mta:build`.
 
 What gets deployed:
 
@@ -61,16 +69,19 @@ cf apps
 
 Open the URL of **`Full_Stack-app`** (approuter), **not** `Full_Stack-srv`.
 
+The React UI is **not** a separate MTA module. `mta.yaml` module `Full_Stack-app` with `path: app/router` is correct: that is the SAP Approuter, and the Vite build is copied into `app/router/resources/` during `node scripts/prepare-mta.js` (MTA `before-all`).
+
+If you see a **white screen** and `index.html` still has `<script src="/src/main.jsx">`, the **source** HTML was deployed instead of the Vite `dist`. Rebuild with `npm run mta:build` after pulling these fixes (`resources/` must not be gitignored, or `mbt` omits the JS).
+
 ---
 
 ## XSUAA roles on Trial
 
-1. Cockpit → **Security** → **Role Collections** → **Create**  
-   - `Library-Admin` → add role **`Full_Stack-<org>-<space>.Admin`**  
-   - `Library-Member` → add role **`Full_Stack-<org>-<space>.Member`**
-2. **Users** → your trial user → **Assign Role Collection** (one collection per test; use two users or switch collections to test both).
+1. After deploy, Cockpit → **Security** → **Role Collections**. You should see **Library-Admin** and **Library-Member** (from `xs-security.json`). If not, create them and add application roles `….Admin` / `….Member`.
+2. **Security** → **Users** → your trial user → **Assign Role Collection** (`Library-Admin` to manage data, `Library-Member` for read-only).
+3. Open the **approuter** URL again. Use **Log out** if you were already signed in so the token picks up the new roles.
 
-Role names come from `xs-security.json` (`Admin`, `Member`).
+On BTP there is **no** `admin`/`member` password form. SAP XSUAA is the login. The React login screen is **local only** (`cds watch --profile local`).
 
 ---
 
